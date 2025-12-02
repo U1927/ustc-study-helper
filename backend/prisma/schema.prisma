@@ -1,0 +1,31 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+generator client {
+  provider = "prisma-client-js"
+}
+model User {
+  id        Int      @id @default(autoincrement())
+  gid       String   @unique
+  studentId String   @unique
+  name      String
+  email     String?
+  createdAt DateTime @default(now())
+  events    Event[]
+}
+model Event {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  title        String
+  description  String?
+  startAt      DateTime
+  endAt        DateTime
+  source       String
+  reminderMins Int?
+  isTodo       Boolean  @default(false)
+  expiresAt    DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  User         User     @relation(fields: [userId], references: [id])
+}
